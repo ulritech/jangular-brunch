@@ -1,0 +1,18 @@
+{
+  "name": "jangular-brunch",
+  "version": "0.0.1",
+  "description": "Brunch plugin",
+  "main": "index.js",
+  "author": "Luke Ulrich",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ulritech/jangular-brunch.git"
+  },
+  "dependencies": {
+    "anymatch": "^1.3.0",
+    "jade": "^1.11.0",
+    "lodash": "^3.10.1",
+    "mkdirp": "^0.5.1"
+  }
+}
