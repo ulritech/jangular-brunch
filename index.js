@@ -110,7 +110,7 @@ JangularBrunchPlugin.prototype.compile = function(data, file, done) {
 			// Slightly tweak the template output to accommodate being output via strings
 			template = template.trim()		// Remove the beginning newline character Jade includes
 				.replace(/'/g, "\\'")		// Escape all single quotes
-				.replace('\n', '\\\n');		// And escape any newlines since it will be output
+				.replace('\n', '\n\\');		// And escape any newlines since it will be output
 
 			// Keep track of which file changed
 			this.changedBundleFiles_.push(file);
