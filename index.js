@@ -107,6 +107,11 @@ JangularBrunchPlugin.prototype.compile = function(data, file, done) {
 			console.info('\tCompiled:', file, '-->', targetFile);
 		}
 		else {
+			// Slightly tweak the template output to accommodate being output via strings
+			template = template.trim()		// Remove the beginning newline character Jade includes
+				.replace(/'/g, "\\'")		// Escape all single quotes
+				.replace('\n', '\\\n');		// And escape any newlines since it will be output
+
 			// Keep track of which file changed
 			this.changedBundleFiles_.push(file);
 
@@ -204,7 +209,7 @@ JangularBrunchPlugin.prototype.writeBundle_ = function(bundle) {
 	for (var file in this.compiledFileCache_) {
 		if (bundle.matcher(file)) {
 			var templateName = this.stripRoot_(file),
-				templateContents = this.compiledFileCache_[file].replace(/'/g, "\\'");
+				templateContents = this.compiledFileCache_[file];
 			fs.writeSync(outFd, "\t$templateCache.put('" + templateName + "', '" +
 				templateContents + "');\n");
 		}
