@@ -210,6 +210,10 @@ JangularBrunchPlugin.prototype.writeBundle_ = function(bundle) {
 		if (bundle.matcher(file)) {
 			var templateName = this.stripRoot_(file),
 				templateContents = this.compiledFileCache_[file];
+
+			// All template names in the cache must begin with forward slashes
+			templateName = templateName.replace(/\\/g, '/');
+			
 			fs.writeSync(outFd, "\t$templateCache.put('" + templateName + "', '" +
 				templateContents + "');\n");
 		}
