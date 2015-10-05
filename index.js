@@ -199,12 +199,8 @@ JangularBrunchPlugin.prototype.findDeletedTemplates_ = function(finalJadeTemplat
 };
 
 JangularBrunchPlugin.prototype.writeBundle_ = function(bundle) {
-	var outFile = path.resolve(this.brunchConfig_.paths['public'], bundle.targetFile);
-	mkdirp.sync(path.dirname(outFile));
-	var outFd = fs.openSync(outFile, 'w');
-
-	fs.writeSync(outFd, "angular.module('" + bundle.module + "', [])\n" +
-		".run(['$templateCache', function($templateCache) {\n");
+	var bundleString = "angular.module('" + bundle.module + "', [])\n" +
+		".run(['$templateCache', function($templateCache) {\n";
 
 	for (var file in this.compiledFileCache_) {
 		if (bundle.matcher(file)) {
@@ -214,12 +210,16 @@ JangularBrunchPlugin.prototype.writeBundle_ = function(bundle) {
 			// All template names in the cache must begin with forward slashes
 			templateName = templateName.replace(/\\/g, '/');
 			
-			fs.writeSync(outFd, "\t$templateCache.put('" + templateName + "', '" +
-				templateContents + "');\n");
+			bundleString += "\t$templateCache.put('" + templateName + "', '" +
+				templateContents + "');\n";
 		}
 	}
+	bundleString += "}]);\n";
 
-	fs.writeSync(outFd, "}]);\n");
+	var outFile = path.resolve(this.brunchConfig_.paths['public'], bundle.targetFile);
+	mkdirp.sync(path.dirname(outFile));
+	var outFd = fs.openSync(outFile, 'w');
+	fs.writeSync(outFd, bundleString);
 	fs.closeSync(outFd);
 
 	console.log('\tCompiled module:', bundle.module, 'into', bundle.targetFile);
